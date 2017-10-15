@@ -1,6 +1,7 @@
 # Bld
 
 [![Build Status](https://travis-ci.org/osechet/bld.svg?branch=master)](https://travis-ci.org/osechet/bld)
+[![codecov](https://codecov.io/gh/osechet/bld/branch/master/graph/badge.svg)](https://codecov.io/gh/osechet/bld)
 
 Bld is a project build helper. It is mainly aimed at complex project composed by modules with different languages.
 
