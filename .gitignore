@@ -1,0 +1,9 @@
+# IDE
+.history/
+
+# Python
+__pycache__/
+
+# Dev
+build/
+.coverage
