@@ -42,7 +42,7 @@ def load_project(project_dir):
     sys.path.append(project_dir)
     try:
         project_module = importlib.import_module('projectfile')
-    except ModuleNotFoundError as err:
+    except ImportError as err:
         raise ProjectException(
             'No project definition (project.py) in %s.' % project_dir, err)
 
