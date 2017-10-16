@@ -62,7 +62,7 @@ def load_project(project_dir):
     if hasattr(project_module, 'CUSTOM_ARGS'):
         custom_args = project_module.CUSTOM_ARGS
     else:
-        custom_args = None
+        custom_args = []
 
     return Project(project_module,
                    project_module.NAME,
