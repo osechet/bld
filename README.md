@@ -96,11 +96,34 @@ client:build,server:build,total
 
 ## Development
 
+Note: It is advised to work inside a virtual environment. In this section, we'll work with pew.
+
+* Create the virtual environement:
+```
+pew new bld
+```
+The `new` command automatically open the virtual environment.
+
+* Later to open the virtual environment:
+```
+pew workon bld
+```
+
 * Install dev requirements:
 ```
+pip install -r requirements.txt
 pip install -r requirements_dev.txt
+```
+
+* Run the `bld` command:
+```
+./bld/bld.py -h
 ```
 
 ### Unit tests
 
 To run unit tests, call `py.test`. For code coverage, run `py.test --cov=bldlib`.
+
+### Tests
+
+To install the package being developed, run `pip install -e .` from the project's root directory. You can then uninstall it with `pip uninstall bld`.

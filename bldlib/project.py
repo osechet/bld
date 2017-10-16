@@ -39,21 +39,24 @@ def load_project(project_dir):
     """
     Loads the project definition.
     """
+    if not project_dir or not os.path.exists(project_dir):
+        raise ProjectException("Project directory does not exist")
+
     sys.path.append(project_dir)
     try:
         project_module = importlib.import_module('projectfile')
     except ModuleNotFoundError as err:
         raise ProjectException(
-            'No project definition (project.py) in %s.' % project_dir, err)
+            "No project definition (projectfile.py) in %s." % project_dir, err)
 
     if not hasattr(project_module, 'NAME'):
-        raise ProjectException('No NAME attribute in project definition')
+        raise ProjectException("No NAME attribute in project definition")
     if not hasattr(project_module, 'VERSION'):
-        raise ProjectException('No VERSION attribute in project definition')
-    if not hasattr(project_module, 'VERSION'):
-        raise ProjectException('No MODULES attribute in project definition')
+        raise ProjectException("No VERSION attribute in project definition")
+    if not hasattr(project_module, 'MODULES'):
+        raise ProjectException("No MODULES attribute in project definition")
     if hasattr(project_module, 'BUILD_DIR'):
-        build_dir = os.path.join(project_dir, project_module.BUILD_DIR)
+        build_dir = os.path.abspath(os.path.join(project_dir, project_module.BUILD_DIR))
     else:
         build_dir = os.path.join(project_dir, 'build')
 
@@ -131,7 +134,10 @@ class Project:
         """
         Sets the build_dir.
         """
-        self._build_dir = value
+        if os.path.isabs(value):
+            self._build_dir = os.path.abspath(value)
+        else:
+            self._build_dir = os.path.abspath(os.path.join(self.root_dir, value))
 
     @property
     def install_dir(self):

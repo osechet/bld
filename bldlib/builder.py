@@ -118,6 +118,7 @@ def run():
     logger.debug("Build directory:   %s", project.build_dir)
     logger.debug("Install directory: %s", project.install_dir)
     logger.debug("Dist. directory:   %s", project.dist_dir)
+    logger.debug("Report directory:  %s", project.report_dir)
     logger.debug("Modules:           %s", ', '.join(modules))
     logger.debug("==========")
 

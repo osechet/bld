@@ -6,5 +6,6 @@ __pycache__/
 
 # Dev
 .cache/
+bld.egg-info/
 build/
 .coverage
