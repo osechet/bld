@@ -48,9 +48,10 @@ def run():
 
     parser = argparse.ArgumentParser(description="Build Helper")
     modules_group = parser.add_argument_group('Modules')
-    modules_group.add_argument('modules', nargs='*', choices=[[]] + project.modules,
-                               help="""The available modules. Build all the modules
-                               if none is provided.""")
+    if project.modules:
+        modules_group.add_argument('modules', nargs='*', choices=[[]] + project.modules,
+                                help="""The available modules. Build all the modules
+                                if none is provided.""")
     options_group = parser.add_argument_group('Options')
     options_group.add_argument('-c', '--clean', action='store_true',
                                help="Clean the project")
@@ -99,7 +100,7 @@ def run():
     logger.debug("%s", args)
 
     # Check modules to build
-    if not args.modules:
+    if not hasattr(args, 'modules') or not args.modules:
         modules = project.modules
     else:
         modules = args.modules
@@ -118,6 +119,7 @@ def run():
     logger.debug("Build directory:   %s", project.build_dir)
     logger.debug("Install directory: %s", project.install_dir)
     logger.debug("Dist. directory:   %s", project.dist_dir)
+    logger.debug("Report directory:  %s", project.report_dir)
     logger.debug("Modules:           %s", ', '.join(modules))
     logger.debug("==========")
 

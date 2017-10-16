@@ -53,9 +53,9 @@ def load_project(project_dir):
     if not hasattr(project_module, 'VERSION'):
         raise ProjectException('No MODULES attribute in project definition')
     if hasattr(project_module, 'BUILD_DIR'):
-        build_dir = os.path.join(project_dir, project_module.BUILD_DIR)
+        build_dir = os.path.realpath(os.path.join(project_dir, project_module.BUILD_DIR))
     else:
-        build_dir = os.path.join(project_dir, 'build')
+        build_dir = os.path.realpath(os.path.join(project_dir, 'build'))
 
     return Project(project_module,
                    project_module.NAME,
@@ -90,9 +90,9 @@ class Project:
         if not build_dir:
             raise ProjectException("Invalid build directory")
         self._build_dir = build_dir
-        self._install_dir = os.path.join(self._root_dir, 'release')
-        self._dist_dir = os.path.join(self._root_dir, 'dist')
-        self._report_dir = os.path.join(self._root_dir, 'report')
+        self._install_dir = os.path.realpath(os.path.join(self._build_dir, 'release'))
+        self._dist_dir = os.path.realpath(os.path.join(self._build_dir, 'dist'))
+        self._report_dir = os.path.realpath(os.path.join(self._build_dir, 'report'))
         # Thinks that may depends on directories being set
         self._load_modules(modules)
         self._modules = modules
@@ -131,7 +131,10 @@ class Project:
         """
         Sets the build_dir.
         """
-        self._build_dir = value
+        if os.path.isabs(value):
+            self._build_dir = os.path.realpath(value)
+        else:
+            self._build_dir = os.path.realpath(os.path.join(self._root_dir, value))
 
     @property
     def install_dir(self):
