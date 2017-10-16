@@ -3,6 +3,7 @@
 
 # Python
 __pycache__/
+*.egg
 *.pyc
 
 # Dev
@@ -10,4 +11,3 @@ __pycache__/
 bld.egg-info/
 build/
 .coverage
-bldlib/builder.pyc

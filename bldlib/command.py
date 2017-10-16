@@ -22,7 +22,7 @@ def run(command, logger):
     """
     if not isinstance(command, list):
         command = shlex.split(command)
-    logger.debug("Running %s", command)
+    logger.debug("Running %s", shlex.quote(' '.join(command)))
 
     process = subprocess.Popen(
         command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)

@@ -70,8 +70,6 @@ def run():
                                When tagging a pre-release, the release branch
                                is kept opened.""")
     build_group = parser.add_argument_group('Build Modifiers')
-    build_group.add_argument('-t', '--target',
-                             help="The target platform.")
     build_group.add_argument('-D', '--build-dir',
                              help="The build directory.", default=project.build_dir)
     build_group.add_argument('--install-dir',
@@ -83,7 +81,17 @@ def run():
                            help="Increase verbosity")
     log_group.add_argument('-d', '--debug', action='store_true',
                            help="Enable debug logs")
-
+    custom_group = parser.add_argument_group('Custom')
+    for custom_arg in project.custom_args:
+        short_desc = custom_arg.get('short_desc')
+        long_desc = custom_arg.get('long_desc')
+        help_text = custom_arg.get('help')
+        if short_desc and long_desc:
+            custom_group.add_argument(short_desc, long_desc, help=help_text)
+        elif short_desc:
+            custom_group.add_argument(short_desc, help=help_text)
+        else:
+            custom_group.add_argument(long_desc, help=help_text)
     args = parser.parse_args()
 
     # Validate arguments

@@ -56,11 +56,14 @@ def load_project(project_dir):
         build_dir = os.path.realpath(os.path.join(project_dir, project_module.BUILD_DIR))
     else:
         build_dir = os.path.realpath(os.path.join(project_dir, 'build'))
+    if hasattr(project_module, 'CUSTOM_ARGS'):
+        custom_args = project_module.CUSTOM_ARGS
 
     return Project(project_module,
                    project_module.NAME,
                    project_module.VERSION,
                    project_module.MODULES,
+                   custom_args,
                    project_dir,
                    build_dir)
 
@@ -69,7 +72,7 @@ class Project:
     The Project class contains all the information about the project.
     """
 
-    def __init__(self, projectfile, name, version, modules, root_dir, build_dir):
+    def __init__(self, projectfile, name, version, modules, custom_args, root_dir, build_dir):
         self._logger = logger.Logger()
         if not projectfile:
             raise ProjectException("Invalid projectfile")
@@ -83,6 +86,9 @@ class Project:
             raise ProjectException("Invalid version: %s" % version)
         if not isinstance(modules, list):
             raise ProjectException("Modules must be defined as a list")
+        if not modules:
+            raise ProjectException("At least one module must be defined")
+        self._custom_args = custom_args
         # Directories
         if not root_dir:
             raise ProjectException("Invalid root directory")
@@ -99,6 +105,13 @@ class Project:
         self._time_report = TimeReport()
 
     @property
+    def logger(self):
+        """
+        Returns the logger.
+        """
+        return self._logger
+
+    @property
     def name(self):
         """
         Returns the name.
@@ -111,6 +124,20 @@ class Project:
         Returns the version.
         """
         return self._version
+
+    @property
+    def modules(self):
+        """
+        Returns the modules.
+        """
+        return self._modules
+
+    @property
+    def custom_args(self):
+        """
+        Returns the custom_args.
+        """
+        return self._custom_args
 
     @property
     def root_dir(self):
@@ -170,20 +197,6 @@ class Project:
         Returns the report_dir.
         """
         return self._report_dir
-
-    @property
-    def modules(self):
-        """
-        Returns the modules.
-        """
-        return self._modules
-
-    @property
-    def logger(self):
-        """
-        Returns the logger.
-        """
-        return self._logger
 
     @contextmanager
     def chdir(self, dir_path):
@@ -284,7 +297,7 @@ class Project:
             try:
                 # Just import the module, it can then be access with sys.modules[name]
                 importlib.import_module(module_name)
-            except ModuleNotFoundError:
+            except ImportError:
                 raise ProjectException('Module \'%s\' not found' % module_name)
 
     def _call(self, modules, func_name, args):
