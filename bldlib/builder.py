@@ -48,9 +48,10 @@ def run():
 
     parser = argparse.ArgumentParser(description="Build Helper")
     modules_group = parser.add_argument_group('Modules')
-    modules_group.add_argument('modules', nargs='*', choices=[[]] + project.modules,
-                               help="""The available modules. Build all the modules
-                               if none is provided.""")
+    if project.modules:
+        modules_group.add_argument('modules', nargs='*', choices=[[]] + project.modules,
+                                   help="""The available modules. Build all the modules
+                                   if none is provided.""")
     options_group = parser.add_argument_group('Options')
     options_group.add_argument('-c', '--clean', action='store_true',
                                help="Clean the project")
@@ -69,8 +70,6 @@ def run():
                                When tagging a pre-release, the release branch
                                is kept opened.""")
     build_group = parser.add_argument_group('Build Modifiers')
-    build_group.add_argument('-t', '--target',
-                             help="The target platform.")
     build_group.add_argument('-D', '--build-dir',
                              help="The build directory.", default=project.build_dir)
     build_group.add_argument('--install-dir',
@@ -82,13 +81,33 @@ def run():
                            help="Increase verbosity")
     log_group.add_argument('-d', '--debug', action='store_true',
                            help="Enable debug logs")
-
+    log_group.add_argument('--log-out', help="Send the logs to provided file")
+    custom_group = parser.add_argument_group('Custom')
+    for custom_arg in project.custom_args:
+        short_desc = custom_arg.get('short_desc')
+        long_desc = custom_arg.get('long_desc')
+        help_text = custom_arg.get('help')
+        if short_desc and long_desc:
+            custom_group.add_argument(short_desc, long_desc, help=help_text)
+        elif short_desc:
+            custom_group.add_argument(short_desc, help=help_text)
+        else:
+            custom_group.add_argument(long_desc, help=help_text)
     args = parser.parse_args()
 
     # Validate arguments
     if args.k and not args.tag:
         logger.error("-k can only be used with --tag")
         exit(ERR_CODE_INVALID_ARGUMENTS)
+
+    if args.log_out:
+        logger.log("Logs written into %s" % args.log_out)
+        handler.flush()
+        root_logger = logging.getLogger('')
+        log_file = logging.FileHandler(args.log_out, mode='w')
+        log_file.setLevel(logging.DEBUG)
+        root_logger.removeHandler(handler)
+        root_logger.addHandler(log_file)
 
     # Enable verbosity
     logger.verbose = args.verbose
@@ -99,7 +118,7 @@ def run():
     logger.debug("%s", args)
 
     # Check modules to build
-    if not args.modules:
+    if not hasattr(args, 'modules') or not args.modules:
         modules = project.modules
     else:
         modules = args.modules
