@@ -105,7 +105,7 @@ def run():
         handler.flush()
         root_logger = logging.getLogger('')
         log_file = logging.FileHandler(args.log_out, mode='w')
-        log_file.setLevel(logging.INFO)
+        log_file.setLevel(logging.DEBUG)
         root_logger.removeHandler(handler)
         root_logger.addHandler(log_file)
 
