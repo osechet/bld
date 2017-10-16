@@ -5,6 +5,7 @@ Project-related classes and functions.
 from contextlib import contextmanager
 import csv
 import importlib
+import math
 import os
 import sys
 import timeit
@@ -19,9 +20,10 @@ def format_duration(duration):
     """
     Format a duration in second as a hour:minute:second string.
     """
-    hours, remainder = divmod(duration, 3600)
+    negative = duration < 0
+    hours, remainder = divmod(math.fabs(duration), 3600)
     minutes, seconds = divmod(remainder, 60)
-    return '%d:%02d:%02d' % (hours, minutes, seconds)
+    return '%s%d:%02d:%02d' % ('-' if negative else '', hours, minutes, seconds)
 
 class ProjectException(Exception):
     """
@@ -166,7 +168,7 @@ class Project:
         if os.path.isabs(value):
             self._build_dir = os.path.realpath(value)
         else:
-            self._build_dir = os.path.realpath(os.path.join(self._root_dir, value))
+            self._build_dir = os.path.realpath(os.path.join(self.root_dir, value))
 
     @property
     def install_dir(self):
@@ -180,7 +182,10 @@ class Project:
         """
         Sets the install_dir.
         """
-        self._install_dir = value
+        if os.path.isabs(value):
+            self._install_dir = os.path.realpath(value)
+        else:
+            self._install_dir = os.path.realpath(os.path.join(self.build_dir, value))
 
     @property
     def dist_dir(self):
@@ -194,7 +199,10 @@ class Project:
         """
         Sets the dist_dir.
         """
-        self._dist_dir = value
+        if os.path.isabs(value):
+            self._dist_dir = os.path.realpath(value)
+        else:
+            self._dist_dir = os.path.realpath(os.path.join(self.build_dir, value))
 
     @property
     def report_dir(self):
@@ -202,6 +210,13 @@ class Project:
         Returns the report_dir.
         """
         return self._report_dir
+
+    @property
+    def time_report(self):
+        """
+        Returns the time_report.
+        """
+        return self._time_report
 
     @contextmanager
     def chdir(self, dir_path):
@@ -236,13 +251,6 @@ class Project:
             yield
         finally:
             self._time_report.add(name, timeit.default_timer() - begin)
-
-    @property
-    def time_report(self):
-        """
-        Returns the time_report.
-        """
-        return self._time_report
 
     def build(self, args, modules):
         """

@@ -10,4 +10,5 @@ __pycache__/
 .cache/
 bld.egg-info/
 build/
+htmlcov/
 .coverage
