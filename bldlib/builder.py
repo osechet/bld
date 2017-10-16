@@ -81,6 +81,7 @@ def run():
                            help="Increase verbosity")
     log_group.add_argument('-d', '--debug', action='store_true',
                            help="Enable debug logs")
+    log_group.add_argument('--log-out', help="Send the logs to provided file")
     custom_group = parser.add_argument_group('Custom')
     for custom_arg in project.custom_args:
         short_desc = custom_arg.get('short_desc')
@@ -98,6 +99,15 @@ def run():
     if args.k and not args.tag:
         logger.error("-k can only be used with --tag")
         exit(ERR_CODE_INVALID_ARGUMENTS)
+
+    if args.log_out:
+        logger.log("Logs written into %s" % args.log_out)
+        handler.flush()
+        root_logger = logging.getLogger('')
+        log_file = logging.FileHandler(args.log_out, mode='w')
+        log_file.setLevel(logging.INFO)
+        root_logger.removeHandler(handler)
+        root_logger.addHandler(log_file)
 
     # Enable verbosity
     logger.verbose = args.verbose
