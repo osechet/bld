@@ -50,8 +50,8 @@ def run():
     modules_group = parser.add_argument_group('Modules')
     if project.modules:
         modules_group.add_argument('modules', nargs='*', choices=[[]] + project.modules,
-                                help="""The available modules. Build all the modules
-                                if none is provided.""")
+                                   help="""The available modules. Build all the modules
+                                   if none is provided.""")
     options_group = parser.add_argument_group('Options')
     options_group.add_argument('-c', '--clean', action='store_true',
                                help="Clean the project")
