@@ -23,7 +23,7 @@ class TestLoadProject:
     @mock.patch('os.path.exists')
     def test_no_projectfile(self, mock_exists, mock_import_module):
         mock_exists.return_value = True
-        mock_import_module.side_effect = ModuleNotFoundError("")
+        mock_import_module.side_effect = ImportError("")
 
         with pytest.raises(ProjectException) as exc_info:
             project.load_project('project_path')
