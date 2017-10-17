@@ -87,12 +87,13 @@ def run():
         short_desc = custom_arg.get('short_desc')
         long_desc = custom_arg.get('long_desc')
         help_text = custom_arg.get('help')
+        choices = custom_arg.get('choices')
         if short_desc and long_desc:
-            custom_group.add_argument(short_desc, long_desc, help=help_text)
+            custom_group.add_argument(short_desc, long_desc, help=help_text, choices=choices)
         elif short_desc:
-            custom_group.add_argument(short_desc, help=help_text)
+            custom_group.add_argument(short_desc, help=help_text, choices=choices)
         else:
-            custom_group.add_argument(long_desc, help=help_text)
+            custom_group.add_argument(long_desc, help=help_text, choices=choices)
     args = parser.parse_args()
 
     # Validate arguments
