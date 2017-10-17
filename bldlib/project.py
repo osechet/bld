@@ -281,6 +281,9 @@ class Project:
                 status = 'successful'
             except (ProjectException, ModuleException, CommandException):
                 status = 'failed'
+            except Exception as ex:
+                self._logger.error(ex.args[0])
+                status = 'failed'
             finally:
                 # Record execution time
                 elapsed = timeit.default_timer() - begin
