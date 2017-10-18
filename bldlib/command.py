@@ -80,5 +80,5 @@ class AsynchronousFileReader(threading.Thread):
             self._buffer.write(decoded_line)
             if not self._logger.verbose:
                 # Temporary print the output (help to see the command is running)
-                sys.stdout.write('%s\r' % strip_text.ljust(80))
+                sys.stdout.write('%s\x1b[K\r' % strip_text)
                 sys.stdout.flush()

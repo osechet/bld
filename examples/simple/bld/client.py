@@ -23,6 +23,7 @@ def build(project, args):
             run('sleep 1')
 
         with project.step('long_op', "Long operation"):
+            run('echo "A very very very very long line that seams to never end"')
             for i in range(1, 10):
                 run('echo "Doing something - %d"' % i)
                 time.sleep(0.5)
