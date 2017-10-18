@@ -46,12 +46,10 @@ def run(command, logger):
         process.stderr.close()
 
         if process.returncode != 0:
-            logger.error("An error occurred when executing %s:\n" +
-                         "==========\n" +
-                         "%s\n" +
-                         "==========", command, buffer.getvalue())
-            raise CommandException(
-                "An error occurred when executing %s" % command)
+            raise CommandException("""An error occurred when executing %s:
+==========
+%s
+==========""" % (command, buffer.getvalue()))
     finally:
         buffer.close()
 

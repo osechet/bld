@@ -5,6 +5,12 @@ The client module.
 import os
 import time
 
+def clean(project, args):
+    """
+    Clean the module.
+    """
+    pass
+
 def build(project, args):
     """
     Build the module.

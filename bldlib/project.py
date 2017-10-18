@@ -266,20 +266,25 @@ class Project:
                 elif args.tag:
                     self.tag(args.tag.value, args.k)
                 else:
+                    has_command = False
                     if args.clean:
-                        func_name = 'clean'
-                    elif args.build:
-                        func_name = 'build'
-                    elif args.install:
-                        func_name = 'install'
-                    elif args.package:
-                        func_name = 'package'
-                    else:
-                        # Build by default
-                        func_name = 'build'
-                    self._call(modules, func_name, args)
+                        self._call(modules, 'clean', args)
+                        has_command = True
+                    if args.build:
+                        self._call(modules, 'build', args)
+                        has_command = True
+                    if args.install:
+                        self._call(modules, 'install', args)
+                        has_command = True
+                    if args.package:
+                        self._call(modules, 'package', args)
+                        has_command = True
+                    if not has_command:
+                        # By default, call build
+                        self._call(modules, 'build', args)
                 status = 'successful'
-            except (ProjectException, ModuleException, CommandException):
+            except (ProjectException, ModuleException, CommandException) as ex:
+                self._logger.error(ex.args[0])
                 status = 'failed'
             except Exception as ex:
                 self._logger.error(ex.args[0])
