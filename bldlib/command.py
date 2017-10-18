@@ -5,6 +5,7 @@ Command-related functions.
 import io
 import shlex
 import subprocess
+import sys
 import threading
 
 
@@ -74,5 +75,10 @@ class AsynchronousFileReader(threading.Thread):
         """
         for line in iter(self._fd):
             decoded_line = line.decode('utf-8')
-            self._logger.info(decoded_line.strip())
+            strip_text = decoded_line.strip()
+            self._logger.info(strip_text)
             self._buffer.write(decoded_line)
+            if not self._logger.verbose:
+                # Temporary print the output (help to see the command is running)
+                sys.stdout.write('%s\r' % strip_text.ljust(80))
+                sys.stdout.flush()
