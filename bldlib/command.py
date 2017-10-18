@@ -3,6 +3,7 @@ Command-related functions.
 """
 
 import io
+import os
 import shlex
 import subprocess
 import sys
@@ -73,6 +74,7 @@ class AsynchronousFileReader(threading.Thread):
         """
         The body of the thread: read lines and write them in the buffer.
         """
+        width = self._tty_width()
         for line in iter(self._fd):
             decoded_line = line.decode('utf-8')
             strip_text = decoded_line.strip()
@@ -80,5 +82,9 @@ class AsynchronousFileReader(threading.Thread):
             self._buffer.write(decoded_line)
             if not self._logger.verbose:
                 # Temporary print the output (help to see the command is running)
-                sys.stdout.write('%s\x1b[K\r' % strip_text)
+                sys.stdout.write('%s\x1b[K\r' % strip_text[:width])
                 sys.stdout.flush()
+
+    def _tty_width(self):
+        _, columns = subprocess.check_output(['stty', 'size']).split()
+        return int(columns)

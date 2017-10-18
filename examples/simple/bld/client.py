@@ -28,3 +28,4 @@ def build(project, args):
                 run('echo "Doing something - %d"' % i)
                 time.sleep(0.5)
             run('echo "Another very very very very long line that seams to never end"')
+            run('echo "Another very very very very long line that with a little bit of luck should be much much much bigger than the width of ther running terminal"')
