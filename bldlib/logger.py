@@ -59,27 +59,27 @@ class Logger:
         """
         Error log the given message.
         """
-        self._logger.error(message, *args, **kwargs)
+        self._logger.error(message + '\x1b[K', *args, **kwargs)
 
     def warning(self, message, *args, **kwargs):
         """
         Warning log the given message.
         """
         if self._verbose:
-            self._logger.warning(message, *args, **kwargs)
+            self._logger.warning(message + '\x1b[K', *args, **kwargs)
 
     def info(self, message, *args, **kwargs):
         """
         Info log the given message.
         """
         if self._verbose:
-            self._logger.info(message, *args, **kwargs)
+            self._logger.info(message + '\x1b[K', *args, **kwargs)
 
     def log(self, message, *args, **kwargs):
         """
         Log the given message ignoring the verbosity.
         """
-        self._logger.info(message, *args, **kwargs)
+        self._logger.info(message + '\x1b[K', *args, **kwargs)
 
     def debug(self, message, *args, **kwargs):
         """
@@ -87,4 +87,4 @@ class Logger:
         """
         # Debug messages are not subject to verbosity. If debug is on,
         # they are always displayed.
-        self._logger.debug(message, *args, **kwargs)
+        self._logger.debug(message + '\x1b[K', *args, **kwargs)

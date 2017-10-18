@@ -27,3 +27,4 @@ def build(project, args):
             for i in range(1, 10):
                 run('echo "Doing something - %d"' % i)
                 time.sleep(0.5)
+            run('echo "Another very very very very long line that seams to never end"')
