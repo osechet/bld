@@ -28,7 +28,10 @@ class ColoredFormatter(logging.Formatter):
             level_color = ColoredFormatter.COLORS[level_name]
         time = datetime.fromtimestamp(record.created).strftime('%H:%M:%S')
         colored_time = color(time, style='bold')
-        colored_msg = color(record.msg % record.args, fg=level_color)
+        if record.args:
+            colored_msg = color(record.msg % record.args, fg=level_color)
+        else:
+            colored_msg = color(record.msg, fg=level_color)
         return '%s - %s' % (colored_time, colored_msg)
 
 
