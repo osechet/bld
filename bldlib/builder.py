@@ -61,6 +61,8 @@ def run():
                                help="Install the project")
     options_group.add_argument('-p', '--package', action='store_true',
                                help="Package the project")
+    options_group.add_argument('-l', '--deliver', action='store_true',
+                               help="Create the project deliverable")
     options_group.add_argument('--release',
                                help="Prepare the release of the project")
     options_group.add_argument('--tag',

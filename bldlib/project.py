@@ -294,6 +294,9 @@ class Project:
                     if args.package:
                         self._call(modules, 'package', args)
                         has_command = True
+                    if args.deliver:
+                        self._call(modules, 'deliver', args)
+                        has_command = True
                     if not has_command:
                         # By default, call build
                         self._call(modules, 'build', args)
