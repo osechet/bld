@@ -57,6 +57,10 @@ def load_project(project_dir):
         raise ProjectException("No VERSION attribute in project definition")
     if not hasattr(project_module, 'MODULES'):
         raise ProjectException("No MODULES attribute in project definition")
+    if hasattr(project_module, 'LEGAL'):
+        legal = project_module.LEGAL
+    else:
+        legal = 0
     if hasattr(project_module, 'BUILD_DIR'):
         build_dir = os.path.realpath(os.path.join(project_dir, project_module.BUILD_DIR))
     else:
@@ -69,6 +73,7 @@ def load_project(project_dir):
     return Project(project_module,
                    project_module.NAME,
                    project_module.VERSION,
+                   legal,
                    project_module.MODULES,
                    custom_args,
                    project_dir,
@@ -79,7 +84,7 @@ class Project:
     The Project class contains all the information about the project.
     """
 
-    def __init__(self, projectfile, name, version, modules, custom_args, root_dir, build_dir):
+    def __init__(self, projectfile, name, version, legal, modules, custom_args, root_dir, build_dir):
         self._logger = logger.Logger()
         if not projectfile:
             raise ProjectException("Invalid projectfile")
@@ -91,6 +96,7 @@ class Project:
             self._version = semantic_version.Version(version)
         except ValueError:
             raise ProjectException("Invalid version: %s" % version)
+        self._legal = legal
         if not isinstance(modules, list):
             raise ProjectException("Modules must be defined as a list")
         if not modules:
@@ -131,6 +137,13 @@ class Project:
         Returns the version.
         """
         return self._version
+
+    @property
+    def legal(self):
+        """
+        Returns the legal.
+        """
+        return self._legal
 
     @property
     def modules(self):
