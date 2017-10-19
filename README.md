@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/osechet/bld.svg?branch=master)](https://travis-ci.org/osechet/bld)
 [![codecov](https://codecov.io/gh/osechet/bld/branch/master/graph/badge.svg)](https://codecov.io/gh/osechet/bld)
 
-Bld is a project build helper. It is mainly aimed at complex project composed by modules with different languages.
+Bld (pronouced /bɪld/ as build) is a project build helper. It is mainly aimed at complex project composed by modules with different languages.
 
 A typical project example is a client/server project where the server is coded with one language (C++, Go, Python...) and the client in another (Java, Javascript...). Both modules uses their own build system that can rarely be the same. To build the whole project, you end by creating a lot of scripts that cover the main situations.
 
