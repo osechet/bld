@@ -5,10 +5,12 @@ Project-related classes and functions.
 from contextlib import contextmanager
 import csv
 import importlib
+import io
 import math
 import os
 import sys
 import timeit
+import traceback
 
 import semantic_version
 
@@ -300,7 +302,9 @@ class Project:
                 self._logger.error(ex.args[0])
                 status = 'failed'
             except Exception as ex:
-                self._logger.error(ex.args[0])
+                buffer = io.StringIO()
+                traceback.print_exc(file=buffer)
+                self._logger.error(buffer.getvalue())
                 status = 'failed'
             finally:
                 # Record execution time
