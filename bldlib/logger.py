@@ -68,8 +68,7 @@ class Logger:
         """
         Warning log the given message.
         """
-        if self._verbose:
-            self._logger.warning(message + '\x1b[K', *args, **kwargs)
+        self._logger.warning(message + '\x1b[K', *args, **kwargs)
 
     def info(self, message, *args, **kwargs):
         """
