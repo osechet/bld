@@ -72,7 +72,7 @@ class AsynchronousFileReader(threading.Thread):
         """
         The body of the thread: read lines and write them in the buffer.
         """
-        width = self._tty_width()
+        width = self._tty_width() if not self._logger.verbose else 0
         for line in iter(self._fd):
             decoded_line = line.decode('utf-8')
             strip_text = decoded_line.strip()
