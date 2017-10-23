@@ -84,5 +84,8 @@ class AsynchronousFileReader(threading.Thread):
                 sys.stdout.flush()
 
     def _tty_width(self):
-        _, columns = subprocess.check_output(['stty', 'size']).split()
-        return int(columns)
+        try:
+            _, columns = subprocess.check_output(['stty', 'size']).split()
+            return int(columns)
+        except subprocess.CalledProcessError:
+            return 30

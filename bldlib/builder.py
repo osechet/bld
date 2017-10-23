@@ -157,7 +157,7 @@ def run():
 
     # Build
     try:
-        project.build(args, modules)
+        exit(project.build(args, modules))
     except ModuleException as ex:
         logger.error(ex.args[0])
         exit(ERR_CODE_EXECUTION_ERROR)

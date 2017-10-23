@@ -318,6 +318,7 @@ class Project:
                     os.makedirs(self.report_dir)
                 self._time_report.save_csv(os.path.join(self.report_dir, 'times.csv'))
         self._logger.log("Build %s in %s.", status, format_duration(elapsed))
+        return 0 if status == 'successful' else 1
 
     def prepare_release(self, new_version):
         """
