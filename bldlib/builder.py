@@ -90,12 +90,21 @@ def run():
         long_desc = custom_arg.get('long_desc')
         help_text = custom_arg.get('help')
         choices = custom_arg.get('choices')
-        if short_desc and long_desc:
-            custom_group.add_argument(short_desc, long_desc, help=help_text, choices=choices)
-        elif short_desc:
-            custom_group.add_argument(short_desc, help=help_text, choices=choices)
+        action = 'store_true' if custom_arg.get('flag') else None
+        if choices:
+            if short_desc and long_desc:
+                custom_group.add_argument(short_desc, long_desc, help=help_text, choices=choices)
+            elif short_desc:
+                custom_group.add_argument(short_desc, help=help_text, choices=choices)
+            else:
+                custom_group.add_argument(long_desc, help=help_text, choices=choices)
         else:
-            custom_group.add_argument(long_desc, help=help_text, choices=choices)
+            if short_desc and long_desc:
+                custom_group.add_argument(short_desc, long_desc, help=help_text, action=action)
+            elif short_desc:
+                custom_group.add_argument(short_desc, help=help_text, action=action)
+            else:
+                custom_group.add_argument(long_desc, help=help_text, action=action)
     args = parser.parse_args()
 
     # Validate arguments
