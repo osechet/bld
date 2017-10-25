@@ -7,6 +7,8 @@ import argparse
 import logging
 import os
 
+import colorama
+
 from bldlib.project import load_project, ModuleException, ProjectException
 from bldlib.logger import ColoredFormatter
 
@@ -33,6 +35,10 @@ def run():
     """
     The main function.
     """
+    # Enable color on Windows
+    colorama.init()
+
+    # Initialize default logger
     handler = init_logging()
 
     # Project creation
