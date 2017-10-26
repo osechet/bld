@@ -3,7 +3,7 @@ Command-related functions.
 """
 
 import io
-import os
+import platform
 import shlex
 import subprocess
 import sys
@@ -80,12 +80,22 @@ class AsynchronousFileReader(threading.Thread):
             self._buffer.write(decoded_line)
             if not self._logger.verbose:
                 # Temporary print the output (help to see the command is running)
-                sys.stdout.write('%s\x1b[K\r' % strip_text[:width])
+                sys.stdout.write('%s\x1b[K\r' % strip_text.expandtabs()[:width-5])
                 sys.stdout.flush()
 
     def _tty_width(self):
-        try:
-            _, columns = subprocess.check_output(['stty', 'size']).split()
-            return int(columns)
-        except subprocess.CalledProcessError:
-            return 30
+        columns = 30
+        if platform.system() == 'Windows':
+            try:
+                result = subprocess.check_output(['mode.com', 'con'])
+                for line in result.decode('utf-8').splitlines():
+                    if 'Columns:' in line:
+                        columns = int(line.split(':')[1].strip())
+            except subprocess.CalledProcessError:
+                pass
+        else:
+            try:
+                _, columns = subprocess.check_output(['stty', 'size']).split()
+            except subprocess.CalledProcessError:
+                pass
+        return columns

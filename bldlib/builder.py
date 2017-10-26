@@ -7,6 +7,8 @@ import argparse
 import logging
 import os
 
+import colorama
+
 from bldlib.project import load_project, ModuleException, Project, ProjectException
 from bldlib.logger import ColoredFormatter
 
@@ -33,6 +35,10 @@ def run():
     """
     The main function.
     """
+    # Enable color on Windows
+    colorama.init()
+
+    # Initialize default logger
     handler = init_logging()
 
     # Project creation
@@ -170,6 +176,8 @@ def get_project_dir():
     """
     if os.environ.get('PROJECT_HOME'):
         return os.path.abspath(os.environ['PROJECT_HOME'])
+
+    logging.getLogger('bld').debug("PROJECT_HOME not found. Checking parent directories.")
     current_dir = os.getcwd()
     while current_dir and not os.path.exists(os.path.join(current_dir, Project.PROJECT_FILE)):
         if current_dir == '/':
@@ -179,4 +187,5 @@ def get_project_dir():
 
     if not current_dir:
         raise ProjectException("No %s found in the hierarchy and PROJECT_HOME environment variable is not defined." % Project.PROJECT_FILE)
+    logging.getLogger('bld').info("Using projectfile from: %s", current_dir)
     return current_dir
