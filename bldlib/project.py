@@ -48,10 +48,10 @@ def load_project(project_dir):
 
     sys.path.append(project_dir)
     try:
-        project_module = importlib.import_module('projectfile')
+        project_module = importlib.import_module(Project.PROJECT_MODULE)
     except ImportError as err:
         raise ProjectException(
-            "No project definition (projectfile.py) in %s." % project_dir, err)
+            "No project definition (%s) in %s." % (Project.PROJECT_FILE, project_dir), err)
 
     if not hasattr(project_module, 'NAME'):
         raise ProjectException("No NAME attribute in project definition")
@@ -85,6 +85,9 @@ class Project:
     """
     The Project class contains all the information about the project.
     """
+
+    PROJECT_MODULE = 'projectfile'
+    PROJECT_FILE = '%s.py' % PROJECT_MODULE
 
     def __init__(self, projectfile, name, version, legal, modules, custom_args, root_dir, build_dir):
         self._logger = logger.Logger()

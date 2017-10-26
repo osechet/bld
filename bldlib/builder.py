@@ -7,7 +7,7 @@ import argparse
 import logging
 import os
 
-from bldlib.project import load_project, ModuleException, ProjectException
+from bldlib.project import load_project, ModuleException, Project, ProjectException
 from bldlib.logger import ColoredFormatter
 
 ERR_CODE_CANNOT_LOAD_PROJECT = 1
@@ -165,8 +165,18 @@ def run():
 
 def get_project_dir():
     """
-    Returns the project root directory expecting a PROJECT_HOME venv ariable to be defined.
+    Returns the project root directory expecting a PROJECT_HOME env variable to be defined.
+    If PROJECT_HOME is not defined, try to find a projectfile.py in the hierarchy.
     """
-    if not os.environ.get('PROJECT_HOME'):
-        raise ProjectException("No PROJECT_HOME environment variable defined.")
-    return os.path.abspath(os.environ['PROJECT_HOME'])
+    if os.environ.get('PROJECT_HOME'):
+        return os.path.abspath(os.environ['PROJECT_HOME'])
+    current_dir = os.getcwd()
+    while current_dir and not os.path.exists(os.path.join(current_dir, Project.PROJECT_FILE)):
+        if current_dir == '/':
+            current_dir = None
+        else:
+            current_dir = os.path.dirname(current_dir)
+
+    if not current_dir:
+        raise ProjectException("No %s found in the hierarchy and PROJECT_HOME environment variable is not defined." % Project.PROJECT_FILE)
+    return current_dir
