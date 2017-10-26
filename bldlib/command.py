@@ -26,8 +26,8 @@ def run(command, logger):
         command = shlex.split(command)
     logger.debug("Running %s", shlex.quote(' '.join(command)))
 
-    process = subprocess.Popen(
-        command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    process = subprocess.Popen(command, shell=True,
+                               stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
     try:
         buffer = io.StringIO()
