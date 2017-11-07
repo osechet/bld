@@ -96,6 +96,7 @@ class AsynchronousFileReader(threading.Thread):
         else:
             try:
                 _, columns = subprocess.check_output(['stty', 'size']).split()
+                columns = int(columns)
             except subprocess.CalledProcessError:
                 pass
         return columns
