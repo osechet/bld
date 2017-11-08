@@ -180,7 +180,8 @@ def get_project_dir():
     logging.getLogger('bld').debug("PROJECT_HOME not found. Checking parent directories.")
     current_dir = os.getcwd()
     while current_dir and not os.path.exists(os.path.join(current_dir, Project.PROJECT_FILE)):
-        if current_dir == '/':
+        if os.path.dirname(current_dir) == current_dir:
+            # Reach the root
             current_dir = None
         else:
             current_dir = os.path.dirname(current_dir)
