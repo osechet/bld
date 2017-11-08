@@ -26,7 +26,7 @@ def run(command, logger):
         command = shlex.split(command)
     logger.debug("Running %s", shlex.quote(' '.join(command)))
 
-    process = subprocess.Popen(command, shell=True,
+    process = subprocess.Popen(command, shell=(platform.system() == 'Windows'),
                                stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
     try:
