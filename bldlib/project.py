@@ -342,8 +342,8 @@ class Project:
             try:
                 # Just import the module, it can then be access with sys.modules[name]
                 importlib.import_module(module_name)
-            except ImportError:
-                raise ProjectException('Module \'%s\' not found' % module_name)
+            except ImportError as err:
+                raise ProjectException('Module \'%s\' not found: %s' % (module_name, err))
 
     def _call(self, modules, func_name, args):
         """
