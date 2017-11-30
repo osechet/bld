@@ -8,6 +8,7 @@ import importlib
 import io
 import math
 import os
+import subprocess
 import sys
 import timeit
 import traceback
@@ -269,6 +270,22 @@ class Project:
             yield
         finally:
             self._time_report.add(name, timeit.default_timer() - begin)
+
+    def shell(self, args):
+        """
+        Open an interactive shell
+        """
+        # Call the project's environment function
+        try:
+            importlib.import_module('env')
+            self._call(['env'], 'setenv', args)
+        except ImportError as err:
+            raise ProjectException('Module \'%s\' not found: %s' % ('env', err))
+
+        print("Type exit or press Ctrl-D to exit\n")
+        subprocess.call([os.getenv('SHELL'), '-i'])
+
+        print("Shell exited\n")
 
     def build(self, args, modules):
         """

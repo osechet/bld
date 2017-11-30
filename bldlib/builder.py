@@ -59,6 +59,8 @@ def run():
                                    help="""The available modules. Build all the modules
                                    if none is provided.""")
     options_group = parser.add_argument_group('Options')
+    options_group.add_argument('-s', '--shell', action='store_true',
+                               help="Open an interactive shell with the project environment")
     options_group.add_argument('-c', '--clean', action='store_true',
                                help="Clean the project")
     options_group.add_argument('-b', '--build', action='store_true',
@@ -160,6 +162,10 @@ def run():
     logger.debug("Report directory:  %s", project.report_dir)
     logger.debug("Modules:           %s", ', '.join(modules))
     logger.debug("==========")
+
+    if args.shell:
+        project.shell(args)
+        exit(0)
 
     # Build
     try:
