@@ -8,6 +8,7 @@ import importlib
 import io
 import math
 import os
+import platform
 import subprocess
 import sys
 import timeit
@@ -282,10 +283,15 @@ class Project:
         except ImportError as err:
             raise ProjectException('Module \'%s\' not found: %s' % ('env', err))
 
-        print("Type exit or press Ctrl-D to exit\n")
-        subprocess.call([os.getenv('SHELL'), '-i'])
+        if platform.system() == 'Windows':
+            print("Type 'exit' to return\n")
+            os.environ['PROMPT'] = "(%s) %s" % (self.name, os.environ['PROMPT'])
+            subprocess.call(['cmd', '/k'])
+        else:
+            print("Type 'exit' or press 'Ctrl+D' to return\n")
+            subprocess.call([os.getenv('SHELL'), '-i'])
+            print("Shell exited\n")
 
-        print("Shell exited\n")
 
     def build(self, args, modules):
         """
