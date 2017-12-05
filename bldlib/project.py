@@ -74,6 +74,11 @@ def load_project(project_dir):
     else:
         custom_args = []
 
+    # Set specific environment variables
+    os.environ['BLD_PROJECT_HOME'] = project_dir
+    os.environ['BLD_PROJECT_NAME'] = project_module.NAME
+    os.environ['BLD_PROJECT_VERSION'] = project_module.VERSION
+
     return Project(project_module,
                    project_module.NAME,
                    project_module.VERSION,
