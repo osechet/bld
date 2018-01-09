@@ -66,6 +66,8 @@ def run():
     options_group = parser.add_argument_group('Options')
     options_group.add_argument('-s', '--shell', action='store_true',
                                help="Open an interactive shell with the project environment")
+    options_group.add_argument('-e', '--execute',
+                               help="Execute the given command in the project environment")
     options_group.add_argument('-c', '--clean', action='store_true',
                                help="Clean the project")
     options_group.add_argument('-b', '--build', action='store_true',
@@ -179,6 +181,10 @@ def run():
 
     if args.shell:
         project.shell(args)
+        exit(0)
+
+    if args.execute:
+        project.execute(args, args.execute)
         exit(0)
 
     # Build

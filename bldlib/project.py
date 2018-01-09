@@ -9,6 +9,7 @@ import io
 import math
 import os
 import platform
+import shlex
 import subprocess
 import sys
 import timeit
@@ -296,6 +297,23 @@ class Project:
             print("Type 'exit' or press 'Ctrl+D' to return\n")
             subprocess.call([os.getenv('SHELL'), '-i'])
             print("Shell exited\n")
+
+
+    def execute(self, args, cmd):
+        """
+        Execute the command in the project environment.
+        """
+        # Call the project's environment function
+        try:
+            importlib.import_module('env')
+            self._call(['env'], 'setenv', args)
+        except ImportError as err:
+            raise ProjectException('Module \'%s\' not found: %s' % ('env', err))
+
+        if not isinstance(cmd, list):
+            cmd = shlex.split(cmd)
+        self.logger.debug("Running command %s", shlex.quote(' '.join(cmd)))
+        subprocess.call(cmd)
 
 
     def build(self, args, modules):
