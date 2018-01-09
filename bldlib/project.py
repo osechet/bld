@@ -425,7 +425,7 @@ class Project:
             if not hasattr(module, func_name):
                 raise ModuleException(
                     "Module %s does not define a '%s' function." % (module_name, func_name))
-            self._logger.log("%s:%s" % (module_name, func_name))
+            self._logger.info("%s:%s" % (module_name, func_name))
             func = getattr(module, func_name)
             func(self, args)
 
