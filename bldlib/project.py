@@ -328,6 +328,9 @@ class Project:
                     if args.deliver:
                         self._call(modules, 'deliver', args)
                         has_command = True
+                    if args.test:
+                        self._call(modules, 'test', args)
+                        has_command = True
                     if not has_command:
                         # By default, call build
                         self._call(modules, 'build', args)
