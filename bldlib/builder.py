@@ -58,6 +58,11 @@ def run():
         modules_group.add_argument('modules', nargs='*', choices=[[]] + project.modules,
                                    help="""The available modules. Build all the modules
                                    if none is provided.""")
+    info_group = parser.add_argument_group('Informations')
+    info_group.add_argument('--project-name', action='store_true',
+                            help="Print the project's name")
+    info_group.add_argument('--project-version', action='store_true',
+                            help="Print the project's version")
     options_group = parser.add_argument_group('Options')
     options_group.add_argument('-s', '--shell', action='store_true',
                                help="Open an interactive shell with the project environment")
@@ -73,10 +78,10 @@ def run():
                                help="Create the project deliverable")
     options_group.add_argument('-t', '--test', action='store_true',
                                help="Run integration tests")
-    options_group.add_argument('--release',
+    options_group.add_argument('--prepare',
                                help="Prepare the release of the project")
     options_group.add_argument('--tag',
-                               help="Tag the project with the given TAG")
+                               help="Tag the project with the given version")
     options_group.add_argument('-k', action='store_true',
                                help="""Used with --tag to tag a pre-release.
                                When tagging a pre-release, the release branch
@@ -153,6 +158,13 @@ def run():
     if args.install_dir:
         project.install_dir = args.install_dir
 
+    if args.project_name:
+        print(project.name)
+        exit(0)
+    if args.project_version:
+        print(project.version)
+        exit(0)
+
     # Summary
     logger.debug("==========")
     logger.debug("Name:              %s", project.name)
@@ -196,5 +208,5 @@ def get_project_dir():
 
     if not current_dir:
         raise ProjectException("No %s found in the hierarchy and PROJECT_HOME environment variable is not defined." % Project.PROJECT_FILE)
-    logging.getLogger('bld').info("Using projectfile from: %s", current_dir)
+    logging.getLogger('bld').debug("Using projectfile from: %s", current_dir)
     return current_dir

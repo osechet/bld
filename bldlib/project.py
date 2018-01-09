@@ -307,10 +307,10 @@ class Project:
             try:
                 if not os.path.exists(self.build_dir):
                     os.makedirs(self.build_dir)
-                if args.release:
-                    self.prepare_release(args.release.value)
+                if args.prepare:
+                    self.prepare_release(args.prepare)
                 elif args.tag:
-                    self.tag(args.tag.value, args.k)
+                    self.tag(args.tag, args.k)
                 else:
                     has_command = False
                     if args.clean:
@@ -354,17 +354,38 @@ class Project:
         self._logger.log("Build %s in %s.", status, format_duration(elapsed))
         return 0 if status == 'successful' else 1
 
+
     def prepare_release(self, new_version):
         """
         Prepare the release. It creates a release branch and update the project version.
         """
-        pass
+        # Call the project's prepare_release function
+        try:
+            importlib.import_module('management')
+            func = getattr(sys.modules['management'], 'prepare_release')
+            try:
+                func(self, semantic_version.Version(new_version))
+            except ValueError:
+                raise ProjectException("Invalid version: %s" % new_version)
+        except ImportError as err:
+            raise ProjectException('Module \'%s\' not found: %s' % ('env', err))
 
-    def tag(self, tag, is_pre_release):
+
+    def tag(self, version, is_pre_release):
         """
         Tag the project.
         """
-        pass
+        # Call the project's tag function
+        try:
+            importlib.import_module('management')
+            func = getattr(sys.modules['management'], 'tag')
+            try:
+                func(self, semantic_version.Version(version), is_pre_release)
+            except ValueError:
+                raise ProjectException("Invalid version: %s" % version)
+        except ImportError as err:
+            raise ProjectException('Module \'%s\' not found: %s' % ('env', err))
+
 
     def _load_modules(self, modules):
         # The module scripts are expected to be in the bld directory
@@ -375,6 +396,7 @@ class Project:
                 importlib.import_module(module_name)
             except ImportError as err:
                 raise ProjectException('Module \'%s\' not found: %s' % (module_name, err))
+
 
     def _call(self, modules, func_name, args):
         """
@@ -388,6 +410,7 @@ class Project:
             self._logger.log("%s:%s" % (module_name, func_name))
             func = getattr(module, func_name)
             func(self, args)
+
 
 class TimeReport:
     """
