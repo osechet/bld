@@ -326,7 +326,7 @@ class Project:
                 if not os.path.exists(self.build_dir):
                     os.makedirs(self.build_dir)
                 if args.prepare:
-                    self.prepare_release(args, args.prepare)
+                    self.prepare_release(args, args.prepare, args.next_version)
                 elif args.tag:
                     self.tag(args, args.tag, args.k)
                 else:
@@ -380,7 +380,7 @@ class Project:
         return 0 if status == 'successful' else 1
 
 
-    def prepare_release(self, args, new_version):
+    def prepare_release(self, args, new_version, next_version=None):
         """
         Prepare the release. It creates a release branch and update the project version.
         """
@@ -396,7 +396,10 @@ class Project:
             importlib.import_module('management')
             func = getattr(sys.modules['management'], 'prepare_release')
             try:
-                func(self, semantic_version.Version(new_version))
+                new_version = semantic_version.Version(new_version)
+                if next_version:
+                    next_version = semantic_version.Version(next_version)
+                func(self, new_version, next_version)
             except ValueError:
                 raise ProjectException("Invalid version: %s" % new_version)
         except ImportError as err:

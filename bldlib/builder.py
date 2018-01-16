@@ -82,6 +82,8 @@ def run():
                                help="Run integration tests")
     options_group.add_argument('--prepare',
                                help="Prepare the release of the project")
+    options_group.add_argument('--next-version',
+                               help="The next iteration version when preparing a release")
     options_group.add_argument('--tag',
                                help="Tag the project with the given version")
     options_group.add_argument('-k', action='store_true',
@@ -127,6 +129,9 @@ def run():
     # Validate arguments
     if args.k and not args.tag:
         logger.error("-k can only be used with --tag")
+        exit(ERR_CODE_INVALID_ARGUMENTS)
+    if args.next_version and not args.prepare:
+        logger.error("--next_version can only be used with --prepare")
         exit(ERR_CODE_INVALID_ARGUMENTS)
 
     if args.log_file:
