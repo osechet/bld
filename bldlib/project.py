@@ -330,7 +330,7 @@ class Project:
                 elif args.tag:
                     self.tag(args, args.tag, args.k)
                 elif args.set_version:
-                    self.set_version(args.set_version)
+                    self.set_version(args, args.set_version)
                 else:
                     # Call the project's environment function
                     try:
@@ -436,11 +436,19 @@ class Project:
             raise ProjectException('Module \'%s\' not found: %s' % (module_name, err))
 
 
-    def set_version(self, version):
+    def set_version(self, args, version):
         """
         Change the project's version.
         """
-        # Call the project's tag function
+        # Call the project's environment function
+        try:
+            module_name = 'env'
+            importlib.import_module(module_name)
+            self._call([module_name], 'setenv', args)
+        except ImportError as err:
+            raise ProjectException('Module \'%s\' not found: %s' % (module_name, err))
+
+        # Call the project's update_version function
         try:
             module_name = 'management'
             importlib.import_module(module_name)
