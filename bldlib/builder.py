@@ -84,6 +84,8 @@ def run():
                                help="Prepare the release of the project")
     options_group.add_argument('--next-version',
                                help="The next iteration version when preparing a release")
+    options_group.add_argument('--set-version',
+                               help="Change the project's version")
     options_group.add_argument('--tag',
                                help="Tag the project with the given version")
     options_group.add_argument('-k', action='store_true',

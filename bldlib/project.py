@@ -329,13 +329,16 @@ class Project:
                     self.prepare_release(args, args.prepare, args.next_version)
                 elif args.tag:
                     self.tag(args, args.tag, args.k)
+                elif args.set_version:
+                    self.set_version(args.set_version)
                 else:
                     # Call the project's environment function
                     try:
-                        importlib.import_module('env')
-                        self._call(['env'], 'setenv', args)
+                        module_name = 'env'
+                        importlib.import_module(module_name)
+                        self._call([module_name], 'setenv', args)
                     except ImportError as err:
-                        raise ProjectException('Module \'%s\' not found: %s' % ('env', err))
+                        raise ProjectException('Module \'%s\' not found: %s' % (module_name, err))
 
                     has_command = False
                     if args.clean:
@@ -386,15 +389,17 @@ class Project:
         """
         # Call the project's environment function
         try:
-            importlib.import_module('env')
-            self._call(['env'], 'setenv', args)
+            module_name = 'env'
+            importlib.import_module(module_name)
+            self._call([module_name], 'setenv', args)
         except ImportError as err:
-            raise ProjectException('Module \'%s\' not found: %s' % ('env', err))
+            raise ProjectException('Module \'%s\' not found: %s' % (module_name, err))
 
         # Call the project's prepare_release function
         try:
-            importlib.import_module('management')
-            func = getattr(sys.modules['management'], 'prepare_release')
+            module_name = 'management'
+            importlib.import_module(module_name)
+            func = getattr(sys.modules[module_name], 'prepare_release')
             try:
                 new_version = semantic_version.Version(new_version)
                 if next_version:
@@ -403,7 +408,7 @@ class Project:
             except ValueError:
                 raise ProjectException("Invalid version: %s" % new_version)
         except ImportError as err:
-            raise ProjectException('Module \'%s\' not found: %s' % ('env', err))
+            raise ProjectException('Module \'%s\' not found: %s' % (module_name, err))
 
 
     def tag(self, args, version, is_pre_release):
@@ -412,22 +417,40 @@ class Project:
         """
         # Call the project's environment function
         try:
-            importlib.import_module('env')
-            self._call(['env'], 'setenv', args)
+            module_name = 'env'
+            importlib.import_module(module_name)
+            self._call([module_name], 'setenv', args)
         except ImportError as err:
-            raise ProjectException('Module \'%s\' not found: %s' % ('env', err))
+            raise ProjectException('Module \'%s\' not found: %s' % (module_name, err))
 
         # Call the project's tag function
         try:
-            importlib.import_module('management')
-            func = getattr(sys.modules['management'], 'tag')
+            module_name = 'management'
+            importlib.import_module(module_name)
+            func = getattr(sys.modules[module_name], 'tag')
             try:
                 func(self, semantic_version.Version(version), is_pre_release)
             except ValueError:
                 raise ProjectException("Invalid version: %s" % version)
         except ImportError as err:
-            raise ProjectException('Module \'%s\' not found: %s' % ('env', err))
+            raise ProjectException('Module \'%s\' not found: %s' % (module_name, err))
 
+
+    def set_version(self, version):
+        """
+        Change the project's version.
+        """
+        # Call the project's tag function
+        try:
+            module_name = 'management'
+            importlib.import_module(module_name)
+            func = getattr(sys.modules[module_name], 'update_version')
+            try:
+                func(self, semantic_version.Version(version))
+            except ValueError:
+                raise ProjectException("Invalid version: %s" % version)
+        except ImportError as err:
+            raise ProjectException('Module \'%s\' not found: %s' % (module_name, err))
 
     def _load_modules(self, modules):
         # The module scripts are expected to be in the bld directory
