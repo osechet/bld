@@ -75,7 +75,7 @@ class AsynchronousFileReader(threading.Thread):
         width = self._tty_width() if not self._logger.verbose else 0
         for line in iter(self._fd):
             decoded_line = line.decode('utf-8')
-            strip_text = decoded_line.strip()
+            strip_text = decoded_line.rstrip()
             self._logger.info(strip_text)
             self._buffer.write(decoded_line)
             if not self._logger.verbose:
