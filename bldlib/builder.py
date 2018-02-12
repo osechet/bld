@@ -191,8 +191,7 @@ def run():
         exit(0)
 
     if args.execute:
-        project.execute(args, args.execute)
-        exit(0)
+        exit(project.execute(args, args.execute))
 
     # Build
     try:

@@ -301,7 +301,7 @@ class Project:
 
     def execute(self, args, cmd):
         """
-        Execute the command in the project environment.
+        Execute the command in the project environment and returns the its return code.
         """
         # Call the project's environment function
         try:
@@ -313,7 +313,7 @@ class Project:
         if not isinstance(cmd, list):
             cmd = shlex.split(cmd)
         self.logger.debug("Running command %s", shlex.quote(' '.join(cmd)))
-        subprocess.call(cmd)
+        return subprocess.call(cmd)
 
 
     def build(self, args, modules):
