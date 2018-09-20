@@ -47,14 +47,14 @@ class Logger:
     @property
     def verbose(self):
         """
-        Returns the verbose.
+        Returns the verbose flag.
         """
         return self._verbose
 
     @verbose.setter
     def verbose(self, value):
         """
-        Sets the verbose.
+        Sets the verbose flag.
         """
         self._verbose = value
 

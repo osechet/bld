@@ -107,6 +107,7 @@ class TestLoadProject:
             VERSION = '0.1.0-dev'
             MODULES = ['main']
             BUILD_DIR = '../build'
+            LEGAL = 'Copyright (c) 2018 Olivier Sechet'
             CUSTOM_ARGS = [{'--custom'}]
         mock_exists.return_value = True
         mock_import_module.return_value = Projectfile()
@@ -173,12 +174,14 @@ class TestProject:
         mock_import_module.return_value = {}
 
         project_path = os.path.join(os.environ['HOME'], 'test')
-        proj = Project({'NAME': 'test'}, 'test', '0.1.0-dev', None,
+        proj = Project({'NAME': 'test'}, 'test', '0.1.0-dev',
+                       'Copyright (c) 2018 Olivier Sechet',
                        ['main'], [{'--custom'}], project_path,
                        os.path.join(project_path, 'build'))
         assert proj.logger
         assert proj.name == 'test'
         assert proj.version == semantic_version.Version('0.1.0-dev')
+        assert proj.legal == 'Copyright (c) 2018 Olivier Sechet'
         assert proj.modules == ['main']
         assert proj.custom_args == [{'--custom'}]
         assert proj.root_dir == project_path
