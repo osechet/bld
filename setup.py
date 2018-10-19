@@ -48,7 +48,7 @@ setup(
     long_description='A project build helper used to management of complex multi-module projects',
 
     # The project's main homepage.
-    url='https://github/osechet/bld',
+    url='https://github.com/osechet/bld',
 
     # Author details
     author='Olivier Sechet',
