@@ -25,6 +25,14 @@ def get_requires(filename):
 PROJECT_REQUIREMENTS = get_requires("requirements.txt")
 DEV_REQUIREMENTS = get_requires("requirements_dev.txt")
 
+def load_description():
+    """
+    Read the contents of your README file
+    """
+    this_directory = os.path.abspath(os.path.dirname(__file__))
+    with open(os.path.join(this_directory, 'README.md'), encoding='utf-8') as f:
+        long_description = f.read()
+    return long_description
 
 def load_version():
     """
@@ -45,7 +53,8 @@ setup(
     version=load_version(), # + ".rc1",
 
     description='Bld project build helper',
-    long_description='A project build helper used to management of complex multi-module projects',
+    long_description=load_description(),
+    long_description_content_type='text/markdown',
 
     # The project's main homepage.
     url='https://github.com/osechet/bld',
