@@ -12,7 +12,7 @@ Bld can be used to avoid the creation of all those scripts. Just create a Python
 ## Installation
 
 * From source:
-```
+```bash
 git clone https://github.com/osechet/bld
 cd bld
 python setup.py install
@@ -99,7 +99,7 @@ client:build,server:build,total
 Note: It is advised to work inside a virtual environment. In this section, we'll work with venv.
 
 * Create the virtual environement:
-```
+```bash
 python3 -m venv ./venv
 ```
 
@@ -109,13 +109,13 @@ python3 -m venv ./venv
 ```
 
 * Install requirements (once in virtual environment):
-```
+```bash
 python -m pip install -r requirements.txt
 python -m pip install -r requirements_dev.txt
 ```
 
 * Run the `bld` command:
-```
+```bash
 ./bldlib/bld.py -h
 ```
 
@@ -129,7 +129,7 @@ To install the package being developed, run `pip install -e .` from the project'
 
 ### Publishing
 
-```
+```bash
 python setup.py sdist
-twine upload dist/* -r testpypi
+twine upload dist/*
 ```
