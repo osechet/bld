@@ -8,12 +8,13 @@ python:
   - 3.8
 
 install:
+  - python -V
   - pip install codecov
   - pip install -r requirements.txt
-  - pip install -r requirements_dev.txt
+  - pip install -r requirements-dev.txt
 
 script:
-  - py.test --cov=bldlib
+  - python -m pytest tests --junitxml=tests.xml --cov --cov-report term --cov-report xml:coverage.xml
 
 after_success:
   - codecov
