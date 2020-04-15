@@ -16,6 +16,8 @@ def get_requires(filename):
     List all the requirements from the given file.
     """
     requirements = []
+    if not os.path.exists(filename):
+        return requirements
     with open(filename, "rt") as req_file:
         for line in req_file.read().splitlines():
             if not line.strip().startswith("#"):
@@ -23,7 +25,7 @@ def get_requires(filename):
     return requirements
 
 PROJECT_REQUIREMENTS = get_requires("requirements.txt")
-DEV_REQUIREMENTS = get_requires("requirements_dev.txt")
+DEV_REQUIREMENTS = get_requires("requirements-dev.txt")
 
 def load_description():
     """
@@ -74,6 +76,10 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3 :: Only',
     ],
 
