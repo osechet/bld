@@ -18,14 +18,16 @@ def get_requires(filename):
     requirements = []
     if not os.path.exists(filename):
         return requirements
-    with open(filename, "rt") as req_file:
+    with open(filename, 'rt') as req_file:
         for line in req_file.read().splitlines():
-            if not line.strip().startswith("#"):
+            if not line.strip().startswith('#'):
                 requirements.append(line)
     return requirements
 
-PROJECT_REQUIREMENTS = get_requires("requirements.txt")
-DEV_REQUIREMENTS = get_requires("requirements-dev.txt")
+
+PROJECT_REQUIREMENTS = get_requires('requirements.txt')
+DEV_REQUIREMENTS = get_requires('requirements-dev.txt')
+
 
 def load_description():
     """
@@ -36,23 +38,11 @@ def load_description():
         long_description = f.read()
     return long_description
 
-def load_version():
-    """
-    Loads the version from a file.
-    """
-    filename = os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                            'bldlib', '__init__.py')
-    with open(filename, 'rt') as version_file:
-        bldlib_init = version_file.read()
-        version = re.search("__version__ = '([0-9a-z.-]+)'", bldlib_init).group(1)
-        return version
 
 setup(
     name='bld',
-    # Versions should comply with PEP440.  For a discussion on single-sourcing
-    # the version across setup.py and the project code, see
-    # https://packaging.python.org/en/latest/single_source_version.html
-    version=load_version(), # + ".rc1",
+    use_scm_version={'write_to': 'bldlib/_version.py'},
+    setup_requires=['setuptools-scm', 'setuptools>=40.0'],
 
     description='Bld project build helper',
     long_description=load_description(),
@@ -88,7 +78,7 @@ setup(
 
     # You can just specify the packages manually here if your project is
     # simple. Or you can use find_packages().
-    packages=find_packages(exclude=["tests"]),
+    packages=find_packages(exclude=['tests']),
 
     # List run-time dependencies here.  These will be installed by pip when
     # your project is installed. For an analysis of "install_requires" vs pip's
