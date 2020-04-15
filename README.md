@@ -130,6 +130,7 @@ To install the package being developed, run `pip install -e .` from the project'
 ### Publishing
 
 ```bash
+rm -rf dist
 python setup.py sdist
 twine upload dist/*
 ```
